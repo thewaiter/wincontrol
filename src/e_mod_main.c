@@ -25,7 +25,6 @@ struct _Instance
 {
    E_Gadcon_Client *gcc;
    Evas_Object *o_button;
-   Evas_Object *bd;
 };
 
 static void _button_cb_mouse_down(void *data, Evas * e, Evas_Object * obj, void *event_info);
