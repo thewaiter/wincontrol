@@ -124,17 +124,10 @@ _button_cb_mouse_down (void *data, Evas *e, Evas_Object *obj, void *event_info)
   ev = event_info;
   if (ev->button == 1)
   {
-     E_Object * obj;
-     
-     if (!obj) obj = E_OBJECT(e_border_focused_get());
-     if (!obj) return;
-     if (obj->type != E_BORDER_TYPE)
-     {
-       obj = E_OBJECT(e_border_focused_get());
-       if (!obj) return;
-     }
-     if (!((E_Border *)obj)->lock_close)
-       e_border_act_close_begin((E_Border *)obj);
+    E_Action *a;
+
+    a = e_action_find("window_close");
+    if ((a) && (a->func.go)) a->func.go(NULL, NULL);
   }
 }
 
@@ -142,95 +135,17 @@ static void
 _button_cb_mouse_wheel (void *data, Evas *e, Evas_Object *obj, void *event_info)
 {
    Evas_Event_Mouse_Wheel *ev = event_info;
+   E_Action *a;
    
    if (ev->z > 0)
    {
-     E_Object * obj;
-     if (!obj) obj = E_OBJECT(e_border_focused_get());
-     if (!obj) return;
-     if (obj->type != E_BORDER_TYPE)
-     {
-       obj = E_OBJECT(e_border_focused_get());
-       if (!obj) return;
-     }
-     if (!((E_Border *)obj)->lock_user_iconify)
-     {
-       E_Border *bd;
-
-       bd = (E_Border *)obj;
-       e_border_iconify(bd);
-     }
+     a = e_action_find("window_iconic_toggle");
+     if ((a) && (a->func.go)) a->func.go(NULL, NULL);
    }
    else if (ev->z < 0)
    {
-     E_Object * obj;
-     E_Border *bd;
-     Eina_Bool resize = EINA_FALSE;
-
-     if (!obj) obj = E_OBJECT(e_border_focused_get());
-     if (!obj) return;
-     if (obj->type != E_BORDER_TYPE)
-     {
-        obj = E_OBJECT(e_border_focused_get());
-        if (!obj) return;
-     }
-     bd = (E_Border *)obj;
-
-     if (bd->internal && (bd->client.netwm.type == ECORE_X_WINDOW_TYPE_DIALOG))
-       resize = (bd->client.icccm.max_w != bd->client.icccm.min_w);
-     if ((!bd->lock_user_maximize) && (!bd->fullscreen) &&
-        (resize || (bd->client.netwm.type == ECORE_X_WINDOW_TYPE_NORMAL) ||
-        (bd->client.netwm.type == ECORE_X_WINDOW_TYPE_UNKNOWN)))
-     {
-         if ((bd->maximized & E_MAXIMIZE_TYPE) != E_MAXIMIZE_NONE)
-         {
-            E_Maximize max;
-
-            max = E_MAXIMIZE_BOTH;
-            max &= E_MAXIMIZE_DIRECTION;
-            if (max == E_MAXIMIZE_VERTICAL)
-            {
-              if (bd->maximized & E_MAXIMIZE_VERTICAL)
-                    e_border_unmaximize(bd, E_MAXIMIZE_VERTICAL);
-              else
-                    goto maximize;
-            }
-            else if (max == E_MAXIMIZE_HORIZONTAL)
-            {
-              if (bd->maximized & E_MAXIMIZE_HORIZONTAL)
-                    e_border_unmaximize(bd, E_MAXIMIZE_HORIZONTAL);
-              else
-                    goto maximize;
-            }
-            else if (max == E_MAXIMIZE_LEFT)
-            {
-              if (bd->maximized & E_MAXIMIZE_LEFT)
-                    e_border_unmaximize(bd, E_MAXIMIZE_LEFT);
-              else
-                    goto maximize;
-            }
-            else if (max == E_MAXIMIZE_RIGHT)
-            {
-              if (bd->maximized & E_MAXIMIZE_RIGHT)
-                    e_border_unmaximize(bd, E_MAXIMIZE_RIGHT);
-              else
-                    goto maximize;
-            }
-            else
-                e_border_unmaximize(bd, E_MAXIMIZE_BOTH);
-         }
-         else
-         {
-maximize:
-         {
-            E_Maximize max;
-
-            max = E_MAXIMIZE_BOTH;
-            max |= E_MAXIMIZE_EXPAND;
-            e_border_maximize(bd,  max);
-         }
-         }
-      }
+     a = e_action_find("window_maximized_toggle");
+     if ((a) && (a->func.go)) a->func.go(NULL, NULL);
    }   
 }
 
