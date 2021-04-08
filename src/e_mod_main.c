@@ -37,19 +37,13 @@ static E_Gadcon_Client *
 _gc_init(E_Gadcon *gc, const char *name, const char *id, const char *style)
 {
    Evas_Object *o;
-  
    E_Gadcon_Client *gcc;
-   Instance *inst;
-   char buf[PATH_MAX];
-
+   
+   Instance *inst = NULL;
    inst = E_NEW(Instance, 1);
 
-   snprintf(buf, sizeof(buf), "%s/e-module-wincontrol.edj", e_module_dir_get(wincontrol_module));
-   
-   o = edje_object_add(gc->evas);
-   //~ e_icon_fdo_icon_set(o, "window-close");
-   if (!e_theme_edje_object_set(o, "base/theme/modules/wincontrol", "modules/wincontrol/main"))
-     edje_object_file_set(o, buf, "modules/wincontrol/main");
+   o = e_icon_add(gc->evas);
+   e_icon_fdo_icon_set(o, "window-close");
 
    evas_object_show(o);
 
@@ -107,6 +101,8 @@ _gc_icon(const E_Gadcon_Client_Class *client_class, Evas * evas)
    o = edje_object_add(evas);
    snprintf (buf, sizeof(buf), "%s/e-module-wincontrol.edj", e_module_dir_get(wincontrol_module));
    edje_object_file_set(o, buf, "icon");
+   o = e_icon_add(evas);
+   e_icon_fdo_icon_set(o, buf);
    return o;
 }
 
