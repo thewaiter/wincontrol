@@ -101,8 +101,6 @@ _gc_icon(const E_Gadcon_Client_Class *client_class, Evas * evas)
    o = edje_object_add(evas);
    snprintf (buf, sizeof(buf), "%s/e-module-wincontrol.edj", e_module_dir_get(wincontrol_module));
    edje_object_file_set(o, buf, "icon");
-   o = e_icon_add(evas);
-   e_icon_fdo_icon_set(o, buf);
    return o;
 }
 
