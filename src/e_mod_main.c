@@ -7,6 +7,7 @@ static void             _gc_orient(E_Gadcon_Client * gcc, E_Gadcon_Orient orient
 static const char      *_gc_label(const E_Gadcon_Client_Class *client_class);
 static                  Evas_Object *_gc_icon(const E_Gadcon_Client_Class *client_class, Evas * evas);
 static const char      *_gc_id_new(const E_Gadcon_Client_Class *client_class);
+static Eina_Bool        _clip_cb_changed_icon_set();
 
 /* and actually define the gadcon class that this module provides (just 1) */
 static const E_Gadcon_Client_Class _gadcon_class = {
@@ -58,7 +59,11 @@ _gc_init(E_Gadcon *gc, const char *name, const char *id, const char *style)
    evas_object_event_callback_add (o, EVAS_CALLBACK_MOUSE_DOWN,
                                    _button_cb_mouse_down, inst);
    evas_object_event_callback_add(o, EVAS_CALLBACK_MOUSE_WHEEL,
-                                  _button_cb_mouse_wheel, inst);                                   
+                                  _button_cb_mouse_wheel, inst);
+   E_LIST_HANDLER_APPEND(handlers, E_EVENT_CONFIG_ICON_THEME,
+                                  _clip_cb_changed_icon_set, NULL);
+   E_LIST_HANDLER_APPEND(handlers, EFREET_EVENT_ICON_CACHE_UPDATE,
+                                  _clip_cb_changed_icon_set, NULL);
 
    return gcc;
 }
@@ -69,12 +74,8 @@ _gc_shutdown(E_Gadcon_Client *gcc)
    Instance *inst;
 
    inst = gcc->data;
-   while (handlers) 
-     {
-        ecore_event_handler_del(handlers->data);
-        handlers = eina_list_remove_list(handlers, handlers);
-     }
 
+   E_FREE_LIST(handlers, ecore_event_handler_del);
    evas_object_del(inst->o_button);
    E_FREE(inst);
 }
@@ -141,6 +142,14 @@ _button_cb_mouse_wheel (void *data, Evas *e, Evas_Object *obj, void *event_info)
      a = e_action_find("window_maximized_toggle");
      if ((a) && (a->func.go)) a->func.go(NULL, NULL);
    }   
+}
+
+static Eina_Bool
+_clip_cb_changed_icon_set()
+{
+   e_gadcon_provider_unregister(&_gadcon_class);
+   e_gadcon_provider_register(&_gadcon_class);
+   return ECORE_CALLBACK_PASS_ON;
 }
 
 /* module setup */
