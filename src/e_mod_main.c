@@ -39,7 +39,7 @@ _gc_init(E_Gadcon *gc, const char *name, const char *id, const char *style)
 {
    Evas_Object *o;
    E_Gadcon_Client *gcc;
-   
+
    Instance *inst = NULL;
    inst = E_NEW(Instance, 1);
 
@@ -114,16 +114,16 @@ _gc_id_new (const E_Gadcon_Client_Class *client_class)
 static void
 _button_cb_mouse_down (void *data, Evas *e, Evas_Object *obj, void *event_info)
 {
-  Evas_Event_Mouse_Down *ev;
-  
-  ev = event_info;
-  if (ev->button == 1)
-  {
-    E_Action *a;
+   Evas_Event_Mouse_Down *ev;
 
-    a = e_action_find("window_close");
-    if ((a) && (a->func.go)) a->func.go(NULL, NULL);
-  }
+   ev = event_info;
+   if (ev->button == 1)
+    {
+      E_Action *a;
+
+      a = e_action_find("window_close");
+      if ((a) && (a->func.go)) a->func.go(NULL, NULL);
+    }
 }
 
 static void
@@ -131,17 +131,17 @@ _button_cb_mouse_wheel (void *data, Evas *e, Evas_Object *obj, void *event_info)
 {
    Evas_Event_Mouse_Wheel *ev = event_info;
    E_Action *a;
-   
+
    if (ev->z > 0)
-   {
-     a = e_action_find("window_iconic_toggle");
-     if ((a) && (a->func.go)) a->func.go(NULL, NULL);
-   }
+     {
+       a = e_action_find("window_iconic_toggle");
+       if ((a) && (a->func.go)) a->func.go(NULL, NULL);
+     }
    else if (ev->z < 0)
-   {
-     a = e_action_find("window_maximized_toggle");
-     if ((a) && (a->func.go)) a->func.go(NULL, NULL);
-   }   
+     {
+       a = e_action_find("window_maximized_toggle");
+       if ((a) && (a->func.go)) a->func.go(NULL, NULL);
+     }
 }
 
 static Eina_Bool
@@ -154,8 +154,8 @@ _clip_cb_changed_icon_set()
 
 /* module setup */
 EAPI E_Module_Api e_modapi = {
-  E_MODULE_API_VERSION,
-  "wincontrol"
+   E_MODULE_API_VERSION,
+   "wincontrol"
 };
 
 EAPI void *
@@ -169,13 +169,13 @@ e_modapi_init (E_Module * m)
 EAPI int
 e_modapi_shutdown (E_Module * m)
 {
-  wincontrol_module = NULL;
-  e_gadcon_provider_unregister(&_gadcon_class);
-  return 1;
+   wincontrol_module = NULL;
+   e_gadcon_provider_unregister(&_gadcon_class);
+   return 1;
 }
 
 EAPI int
 e_modapi_save(E_Module * m)
 {
-  return 1;
+   return 1;
 }
