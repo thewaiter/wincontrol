@@ -1,6 +1,6 @@
 #### Project ####
 project('wincontrol', 'c',
-        version: '0.0.1',
+        version: '0.1.1',
         meson_version: '>= 0.58.0')
 
 add_project_arguments('-D__UNUSED__=__attribute__((unused))', language: 'c')
