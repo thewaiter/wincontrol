@@ -23,23 +23,6 @@ config_h.set_quoted('PACKAGE', meson.project_name())
 config_h.set('__UNUSED__', '__attribute__((unused))')
 config_dir = include_directories('.')
 
-#### i18n ####
-i18n = import('i18n')
-
-if get_option('nls')
-   config_h.set('HAVE_GETTEXT', '1')
-   cc = meson.get_compiler('c')
-endif
-
-#### module.desktop ####
-i18n.merge_file(
-  input: 'module.desktop.in',
-  output: 'module.desktop',
-  type: 'desktop',
-  po_dir: meson.project_source_root(),
-  install: true,
-  install_dir: mod_install_dir
-)
 #### Edje cc ####
 edje_cc = find_program('edje_cc')
 
@@ -59,6 +42,11 @@ custom_target('e-module-wincontrol.edj',
               install_dir: mod_install_dir,
               install    : true
              )
+
+#### module.desktop ####
+install_data('module.desktop',
+  install_dir : mod_install_dir
+)
 
 #### Report ####
 if meson.version().version_compare('>=0.53')
